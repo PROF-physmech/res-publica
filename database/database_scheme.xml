@@ -45,33 +45,32 @@
 <row name="conference_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="date_start" null="0" autoincrement="0">
+<row name="time_start" null="0" autoincrement="0">
 <datatype>DATE</datatype>
 <default>'NULL'</default></row>
-<row name="date_end" null="1" autoincrement="0">
+<row name="time_end" null="1" autoincrement="0">
 <datatype>DATE</datatype>
 <default>NULL</default></row>
 <row name="commentary" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
+<row name="date" null="1" autoincrement="0">
+<datatype>DATE</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>conference_id</part>
 </key>
 </table>
-<table x="711" y="384" name="delegates">
+<table x="623" y="408" name="delegates">
 <row name="delegat_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="person_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<row name="full_name" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="conference_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="conferences" row="conference_id" />
-</row>
-<row name="answer_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="answers" row="answer_id" />
 </row>
 <row name="commentary" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
@@ -86,12 +85,12 @@
 <part>delegat_id</part>
 </key>
 </table>
-<table x="713" y="206" name="presiding">
+<table x="651" y="181" name="presiding">
 <row name="presiding_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="person_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<row name="full_name" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="conference_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -110,8 +109,8 @@
 <part>presiding_id</part>
 </key>
 </table>
-<table x="934" y="200" name="voutings">
-<row name="vouting_id" null="1" autoincrement="1">
+<table x="934" y="200" name="votings">
+<row name="voting_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="question_statement" null="1" autoincrement="0">
@@ -121,7 +120,7 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="presiding" row="presiding_id" />
 </row>
-<row name="vouting_type" null="1" autoincrement="0">
+<row name="voting_type" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="time_start" null="1" autoincrement="0">
@@ -131,25 +130,41 @@
 <datatype>TIME</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>vouting_id</part>
+<part>voting_id</part>
 </key>
 </table>
-<table x="962" y="427" name="answers">
+<table x="1012" y="422" name="answers">
 <row name="answer_id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="answer_content" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="vouting_id" null="1" autoincrement="0">
+<row name="voting_id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="voutings" row="vouting_id" />
+<default>NULL</default><relation table="votings" row="voting_id" />
 </row>
 <row name="quantity_of_votes" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>answer_id</part>
+</key>
+</table>
+<table x="790" y="412" name="delegate_answers">
+<row name="delegate_answer_id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="delegate_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="delegates" row="delegat_id" />
+</row>
+<row name="answer_id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="answers" row="answer_id" />
+</row>
+<key type="PRIMARY" name="">
+<part>delegate_answer_id</part>
 </key>
 </table>
 </sql>
