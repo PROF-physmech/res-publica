@@ -1,2 +1,6 @@
+# platform specific
 /venvironment
+# IDE folders
 .idea
+# other directories in this repository
+/database
