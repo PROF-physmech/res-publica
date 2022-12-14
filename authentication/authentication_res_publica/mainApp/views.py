@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 
-# Create your views here.
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+   ),
+   public=True,
+)
