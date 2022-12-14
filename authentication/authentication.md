@@ -6,3 +6,8 @@
 - В нужно директории создать виртуальную среду
 - Установить все зависимости из файла packages.txt
 - Создать и скопировать джанго приложение
+## Запуск
+- Активированная виртаульная среда, из директории authentication_res_publica
+```bash
+PGSERVICEFILE=config/pg_connection.conf; python manage.py runserver
+```
