@@ -3,7 +3,7 @@ from django.db import models
 
 class Users(models.Model):
     user_id = models.AutoField(primary_key=True)
-    user_role = models.ForeignKey('UserRoles', models.DO_NOTHING, db_column='user_role')
+    user_role = models.IntegerField()
     user_name = models.CharField(max_length=200)
     user_login = models.CharField(max_length=200, blank=True, null=True)
     user_pass = models.CharField(max_length=200)
