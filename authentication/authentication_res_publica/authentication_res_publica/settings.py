@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
-#todo: Нужно будет разобраться с этими штуками
+# todo: Нужно будет разобраться с этими штуками
 MIDDLEWARE = [
     # 'django.middleware.security.SecurityMiddleware',
     # 'django.middleware.common.CommonMiddleware',
@@ -50,7 +50,7 @@ TEMPLATES = [
     },
 ]
 
-#todo: Нужно будет с этими штуками разобраться при диплое
+# todo: Нужно будет с этими штуками разобраться при диплое
 WSGI_APPLICATION = 'authentication_res_publica.wsgi.application'
 
 # Database
@@ -104,3 +104,5 @@ SWAGGER_SETTINGS = {
     },
     'USE_SESSION_AUTH': False,
 }
+
+LOGGING = None
