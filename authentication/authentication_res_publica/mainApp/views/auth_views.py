@@ -44,7 +44,7 @@ class AdminLogin(APIView):
                 status.HTTP_401_UNAUTHORIZED
             )
         if isinstance(exc, Users.MultipleObjectsReturned):
-            logger.debug('Query error: login is not unique')
+            logger.error('Query error: login is not unique')
             logger.debug('Sending response')
             return Response(
                 {'message': 'Login is not unique'},
