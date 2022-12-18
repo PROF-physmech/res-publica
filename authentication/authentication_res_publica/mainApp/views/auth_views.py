@@ -36,14 +36,14 @@ class AdminLogin(APIView):
             logger.debug(f'Validation error: {exc.detail}')
             logger.debug('Sending response')
             return Response(exc.detail, exc.status_code)
-        if isinstance(exc, Users.DoesNotExist):
+        if isinstance(exc, Users.DoesNotExist):  # todo:  inspect exception paras
             logger.debug('Query error: user not found')
             logger.debug('Sending response')
             return Response(
                 {'message': 'User not found'},
                 status.HTTP_401_UNAUTHORIZED
             )
-        if isinstance(exc, Users.MultipleObjectsReturned):
+        if isinstance(exc, Users.MultipleObjectsReturned):  # todo: inspect exception paras
             logger.error('Query error: login is not unique')
             logger.debug('Sending response')
             return Response(
@@ -91,3 +91,5 @@ class AdminLogin(APIView):
         #   handle response
         #   return tokens
         return Response(ser.data, status.HTTP_202_ACCEPTED)
+
+# todo: create abstuct class and sub class logins (admin, user) from it

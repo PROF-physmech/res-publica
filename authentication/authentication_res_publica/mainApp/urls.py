@@ -10,11 +10,7 @@ urlpatterns = [
         # path('user', ),
     ])),
     # path('utilize/', include([
-    #     path('create/', include([
-    #         path('adminCredentials', ),
-    #         path('userQr', ),
-    #     ])),
-    #     path('reset/', include([
+    #     path('set/', include([
     #         path('adminPassword', ),
     #         path('userQr', ),
     #     ])),
