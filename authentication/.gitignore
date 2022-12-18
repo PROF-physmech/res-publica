@@ -2,3 +2,5 @@
 /venvironment
 # IDE folders
 .idea
+# log file
+general.log
