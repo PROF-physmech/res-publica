@@ -1,0 +1,77 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+
+from ..models import Users
+from ..serializers import LoginSerializer, ErrorSerializer
+import logging
+
+logger = logging.getLogger(__name__)
+
+errorResponse = openapi.Response(
+    description='Ответ с сообщением об ошибке',
+    schema=ErrorSerializer,
+)
+
+
+class AdminLogin(APIView):
+    parser_classes = [JSONParser]
+    renderer_classes = [JSONRenderer]
+
+    def handle_exception(self, exc: Exception) -> Response:
+        logger.debug('Error thrown while processing admin login')
+        if isinstance(exc, ValidationError):
+            logger.debug(f'Validation error: {exc.detail}')
+            logger.debug('Sending response')
+            return Response(exc.detail, exc.status_code)
+        if isinstance(exc, Users.DoesNotExist):
+            logger.debug('Query error: user not found')
+            logger.debug('Sending response')
+            return Response(
+                {'message': 'User not found'},
+                status.HTTP_401_UNAUTHORIZED
+            )
+        if isinstance(exc, Users.MultipleObjectsReturned):
+            logger.debug('Query error: login is not unique')
+            logger.debug('Sending response')
+            return Response(
+                {'message': 'Login is not unique'},
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        logger.debug('Ended possible exceptions, delegating to default handler')
+        super().handle_exception(exc)
+
+    @swagger_auto_schema(
+        request_body=LoginSerializer,
+        operation_summary='Точка входа администраторов',
+        tags=['Authentication'],
+        security=[],
+        responses={
+            '401': errorResponse,
+            '400': errorResponse,
+            '500': errorResponse,
+        }
+    )
+    def post(self, request: Request) -> Response:
+        logger.debug('Starting to process admin login')
+        ser = LoginSerializer(data=request.data)
+        logger.debug(f'Created serializer from request data: {ser}')
+        logger.debug('Starting to validate login data')
+        ser.is_valid(raise_exception=True)
+        logger.debug('Login data validated successfuly')
+        data = ser.validated_data
+        logger.debug(f'Validated data: {data}')
+        logger.debug('Starting to retrieve user by login')
+        user = Users.objects.get(user_login=data['login'])
+        logger.debug(f'Found user: {user}')
+        #   verify password
+        #   call authorisation service
+        #   handle response
+        #   return tokens
+        return Response(ser.data, status.HTTP_202_ACCEPTED)
