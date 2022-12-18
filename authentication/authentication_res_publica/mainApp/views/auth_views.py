@@ -12,6 +12,8 @@ from ..models import Users
 from ..serializers import LoginSerializer, ErrorSerializer
 import logging
 
+from ..utils.passwordHasher import verify_password
+
 logger = logging.getLogger(__name__)
 """Логгер для вывода протокола действий и ошибок"""
 
@@ -75,7 +77,16 @@ class AdminLogin(APIView):
         logger.debug('Starting to retrieve user by login')
         user = Users.objects.get(user_login=data['login'])
         logger.debug(f'Found user: {user}')
-        #   verify password
+        logger.debug('Starting to verify password')
+        if not verify_password(data['password'], user.user_pass):
+            logger.debug('Verification failed')
+            logger.debug('Sending response')
+            return Response(
+                {'message': 'Incorrect password'},
+                status.HTTP_401_UNAUTHORIZED,
+            )
+        logger.debug('Verification passed')
+        logger.debug('Calling for authorisation service for tokens')
         #   call authorisation service
         #   handle response
         #   return tokens
