@@ -13,18 +13,22 @@ from ..serializers import LoginSerializer, ErrorSerializer
 import logging
 
 logger = logging.getLogger(__name__)
+"""Логгер для вывода протокола действий и ошибок"""
 
 errorResponse = openapi.Response(
     description='Ответ с сообщением об ошибке',
     schema=ErrorSerializer,
 )
+"""Описание для документации ответа метода в случае возникновения ошибки"""
 
 
 class AdminLogin(APIView):
+    """Класс реализующий метод входа администраторов в систему"""
     parser_classes = [JSONParser]
     renderer_classes = [JSONRenderer]
 
     def handle_exception(self, exc: Exception) -> Response:
+        """Обработчик ошибок метода .post"""
         logger.debug('Error thrown while processing admin login')
         if isinstance(exc, ValidationError):
             logger.debug(f'Validation error: {exc.detail}')
@@ -59,6 +63,7 @@ class AdminLogin(APIView):
         }
     )
     def post(self, request: Request) -> Response:
+        """Метод входа администраторов в систему"""
         logger.debug('Starting to process admin login')
         ser = LoginSerializer(data=request.data)
         logger.debug(f'Created serializer from request data: {ser}')

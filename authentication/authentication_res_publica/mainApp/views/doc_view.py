@@ -11,3 +11,4 @@ schema_view = get_schema_view(
     public=True,
     generator_class=CustomOpenAPISchemaGenerator,
 )
+"""Сгенерированный обработчик для документации сервиса"""
