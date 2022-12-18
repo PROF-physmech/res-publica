@@ -1,6 +1,7 @@
 from django.urls import path, include
 
-from .views import schema_view
+from .views.auth_views import AdminLogin
+from .views.doc_view import schema_view
 
 urlpatterns = [
     path('docs', schema_view.with_ui('swagger')),
