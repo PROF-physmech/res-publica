@@ -4,3 +4,5 @@
 .idea
 # log file
 general.log
+# compile output
+__pycache__/
