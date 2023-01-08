@@ -1,0 +1,213 @@
+openapi: 3.0.3
+info:
+  title: СЭПГ сервис авторизации
+  description: Описание интерфейса сервиса авторизации
+  version: 1.0.0
+servers:
+  - url: localhost:8080
+tags:
+  - name: Authorization
+    description: Эндпоинты для авторизации
+  - name: Internal
+    description: Эндпоинты внутреннего взаимодействия с ресурсным сервисом
+paths:
+  /authorization/login:
+    post:
+      summary: Эндпоинт для входа по логину паролю сотрудников профа
+      tags:
+        - Authorization
+      parameters:
+        - $ref: "#/components/parameters/LanguageParameter"
+      requestBody:
+          $ref: "#/components/requestBodies/LoginBody"
+      responses:
+        '200':
+          $ref: "#/components/responses/LoginSuccessResponse"
+        '400':
+          $ref: "#/components/responses/RequestLoginErrorResponse"
+        '401':
+          $ref: "#/components/responses/AuthorizationErrorResponse"
+        '500':
+          $ref: "#/components/responses/InternalErrorResponse"
+  /authorization/loginQR:
+    post:
+      summary: Эндпоинт для входа по qr-коду делегатов и председательствующего
+      tags:
+        - Authorization
+      parameters:
+        - $ref: "#/components/parameters/LanguageParameter"
+      requestBody:
+          $ref: "#/components/requestBodies/LoginQRBody"
+      responses:
+        '200':
+          $ref: "#/components/responses/LoginSuccessResponse"
+        '400':
+          $ref: "#/components/responses/RequestLoginErrorResponse"
+        '401':
+          $ref: "#/components/responses/AuthorizationErrorResponse"
+        '500':
+          $ref: "#/components/responses/InternalErrorResponse"
+  /authorization/refresh:
+    post:
+      summary: Эндпоинт для обновления токена доступа с помощью рефреш токена
+      tags:
+        - Authorization
+      requestBody:
+          $ref: "#/components/requestBodies/RefreshBody"
+      responses:
+        '200':
+          $ref: "#/components/responses/LoginSuccessResponse"
+        '400':
+          $ref: "#/components/responses/RequestRefreshErrorResponse"
+        '401':
+          $ref: "#/components/responses/AuthorizationErrorResponse"
+        '500':
+          $ref: "#/components/responses/InternalErrorResponse"
+  /internal/payload:
+    put:
+      summary: Эндпоинт для получения информации об аксес токене
+      tags:
+        - Internal
+      requestBody:
+          $ref: "#/components/requestBodies/AccessBody"
+      responses:
+        '200':
+          $ref: "#/components/responses/PayloadSuccessResponse"
+        '400':
+          description: Токен отсутствует
+        '401':
+          description: Токен недействительный
+        '500':
+          description: Внутренняя ошибка
+components:
+  schemas:
+    ErrorSchema:
+      description: Описание тела ошибки
+      properties:
+        errorCode:
+          type: integer
+          description: Код ошибки
+          example: 400
+        errorMessage:
+          type: string
+          description: Сообщение об ошибке
+          example: Всё пропало шеф
+    LoginSchema:
+      description: Описание тела логина
+      properties:
+        login:
+          type: string
+          description: Логин
+          example: login
+        password:
+          type: string
+          description: Пароль
+          example: password
+    LoginQRSchema:
+      description: Описание тела логина
+      properties:
+        qrCode:
+          type: string
+          description: QR-код
+          example: qr-code
+    TokensSchema:
+      description: Описание тела ответа с токенами
+      properties:
+        acessToken:
+          type: string
+          description: Аксесс токен
+          example: asdasdasd
+        acessTokenExpiers:
+          type: string
+          description: Время истечения аксесс токена
+          example: asdasdasd
+        refreshToken:
+          type: string
+          description: Рефреш токен
+          example: asdasdasd
+        refreshTokenExpiers:
+          type: string
+          description: Время истечения рефреш токена
+          example: asdasdasd
+    RefreshTokenSchema:
+      description: Описание тела запроса с рефреш токеном
+      properties:
+        refreshToken:
+          type: string
+          description: Рефреш токен
+          example: asdasdasd
+    AccessTokenSchema:
+      description: Описание тела запроса с аксесс токеном
+      properties:
+        accessToken:
+          type: string
+          description: Аксесс токен
+          example: asdasdasd
+    PayloadSchema:
+      description: Описание тела ответа нагрузки аксесс токена (произвольный объект)
+      type: object
+  responses:
+    LoginSuccessResponse:
+      description: Ответ в случае, если вход успешен (информация авторизаованна)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TokensSchema"
+    PayloadSuccessResponse:
+      description: Ответ в случае, если нагрузка успешно извлечена
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PayloadSchema"
+    RequestLoginErrorResponse:
+      description: Ответ в случае ошибки запроса --- в случае, если данные логина или пароля отсутствуют код = 400, если не найден пользователь код = 401
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorSchema"
+    RequestRefreshErrorResponse:
+      description: Ответ в случае ошибки запроса --- в случае, если данные токена отсутствуют код = 400, если токен не действителен код = 401
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorSchema"
+    AuthorizationErrorResponse:
+      description: Ответ в случае, ошибки авторизации (неверные реквизиты)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorSchema"
+    InternalErrorResponse:
+      description: Ответ в случае, внутренней ошибки
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorSchema"
+  requestBodies:
+    LoginBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginSchema"
+    LoginQRBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginQRSchema"
+    RefreshBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RefreshTokenSchema"
+    AccessBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccessTokenSchema"
+  parameters:
+    LanguageParameter:
+      name: Accept-Language
+      in: header
+      description: Язык, на котором должен быть получен ответ, если не известен пользователь
+      schema:
+        type: string
