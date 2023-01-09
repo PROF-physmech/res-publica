@@ -70,15 +70,26 @@ paths:
         - Internal
       requestBody:
           $ref: "#/components/requestBodies/AccessBody"
+      security:
+        - InternalSecurity: []
       responses:
         '200':
           $ref: "#/components/responses/PayloadSuccessResponse"
         '400':
           description: Токен отсутствует
+          headers:
+            X-connection-secret:
+              $ref: "#/components/headers/InternalSecretHeader"
         '401':
           description: Токен недействительный
+          headers:
+            X-connection-secret:
+              $ref: "#/components/headers/InternalSecretHeader"
         '500':
           description: Внутренняя ошибка
+          headers:
+            X-connection-secret:
+              $ref: "#/components/headers/InternalSecretHeader"
 components:
   schemas:
     ErrorSchema:
@@ -155,6 +166,9 @@ components:
             $ref: "#/components/schemas/TokensSchema"
     PayloadSuccessResponse:
       description: Ответ в случае, если нагрузка успешно извлечена
+      headers:
+        X-connection-secret:
+          $ref: "#/components/headers/InternalSecretHeader"
       content:
         application/json:
           schema:
@@ -211,3 +225,14 @@ components:
       description: Язык, на котором должен быть получен ответ, если не известен пользователь
       schema:
         type: string
+  headers:
+    InternalSecretHeader:
+      description: Новый ключ взаимодействия авторизационного и рест сервиса
+      schema:
+        type: string
+  securitySchemes:
+    InternalSecurity:
+      type: apiKey
+      name: X-connection-secret
+      in: header
+      description: Ключ безопасности для взаимодействия авторизационного и рест сервиса
