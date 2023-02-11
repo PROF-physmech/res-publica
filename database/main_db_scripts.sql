@@ -9,13 +9,14 @@ create table users (
         user_name               varchar(200) not null,
         user_login              varchar(200),
         user_pass               varchar(200) not null,
+        user_language_id 		varchar(5) references user_languages(user_language_id) not null,
         user_photo_id           varchar(100)
 );
 
 create table user_commentaries (
         user_commentary_id      serial primary key,
-        user_commentary_data_id integer references commentries(commentary_id),
-        user_commentary_date    timestamp default now(),
+        user_commentary_data_id integer references commentries(commentary_id) not null,
+        user_commentary_date    timestamp default now() not null,
         user_commentary_author  integer references users(user_id) not null,
         user_commented          integer references users(user_id) not null
 );
@@ -31,8 +32,8 @@ create table conferences (
 
 create table conferences_commentaries (
         conference_commentary_id        serial primary key,
-        conference_commentary_data_id 	integer references commentries(commentary_id),
-        conference_commentary_date      timestamp default now(),
+        conference_commentary_data_id 	integer references commentries(commentary_id) not null,
+        conference_commentary_date      timestamp default now() not null,
         conference_commentary_author    integer references users(user_id) not null,
         conference_commented            integer references conferences(conference_id) not null
 );
@@ -45,8 +46,8 @@ create table presiding (
 
 create table presiding_commentaries (
         presiding_commentary_id         serial primary key,
-        presiding_commentary_data_id 	integer references commentries(commentary_id),
-        presiding_commentary_date       timestamp default now(),
+        presiding_commentary_data_id 	integer references commentries(commentary_id) not null,
+        presiding_commentary_date       timestamp default now() not null,
         presiding_commentary_author     integer references users(user_id) not null,
         presiding_commented             integer references presiding(presiding_id) not null
 );
@@ -59,8 +60,8 @@ create table delegates (
 
 create table delegate_commentaries (
         delegate_commentary_id          serial primary key,
-        delegate_commentary_data_id 	integer references commentries(commentary_id),
-        delegate_commentary_date        timestamp default now(),
+        delegate_commentary_data_id 	integer references commentries(commentary_id) not null,
+        delegate_commentary_date        timestamp default now() not null,
         delegate_commentary_author      integer references users(user_id) not null,
         delegate_commented              integer references delegates(delegate_id) not null
 );
@@ -91,4 +92,9 @@ create table votes (
 create table commentries (
         commentary_id           serial primary key,
         commentary_text         varchar(500)
+);
+
+create table user_languages (
+        user_language_id                varchar(5) primary key,
+        user_language_description       varchar(100)
 );
